@@ -152,9 +152,12 @@ export function GlowyWavesHero() {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
+    const isMobile = window.innerWidth < 768;
     const mouseInfluence = prefersReducedMotion ? 10 : 70;
     const influenceRadius = prefersReducedMotion ? 160 : 320;
     const smoothing = prefersReducedMotion ? 0.04 : 0.1;
+    // On mobile: skip every other wave and use larger x-steps to reduce GPU load
+    const xStep = isMobile ? 8 : 4;
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -183,7 +186,7 @@ export function GlowyWavesHero() {
       ctx.save();
       ctx.beginPath();
 
-      for (let x = 0; x <= canvas.width; x += 4) {
+      for (let x = 0; x <= canvas.width; x += xStep) {
         const dx = x - mouseRef.current.x;
         const dy = canvas.height / 2 - mouseRef.current.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -207,8 +210,10 @@ export function GlowyWavesHero() {
       ctx.lineWidth = 2.5;
       ctx.strokeStyle = wave.color;
       ctx.globalAlpha = wave.opacity;
-      ctx.shadowBlur = 35;
-      ctx.shadowColor = wave.color;
+      if (!isMobile) {
+        ctx.shadowBlur = 35;
+        ctx.shadowColor = wave.color;
+      }
       ctx.stroke();
       ctx.restore();
     };
@@ -228,7 +233,8 @@ export function GlowyWavesHero() {
 
       ctx.globalAlpha = 1;
       ctx.shadowBlur = 0;
-      themeColors.wavePalette.forEach(drawWave);
+      const waves = isMobile ? themeColors.wavePalette.slice(0, 3) : themeColors.wavePalette;
+      waves.forEach(drawWave);
 
       animationId = window.requestAnimationFrame(animate);
     };
@@ -258,8 +264,8 @@ export function GlowyWavesHero() {
         aria-hidden="true"
       />
 
-      {/* subtle radial glows */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
+      {/* subtle radial glows — desktop only, too GPU-heavy on mobile */}
+      <div className="hidden md:block absolute inset-0 -z-10 pointer-events-none">
         <div className="absolute left-1/2 top-0 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-foreground/[0.03] blur-[140px] dark:bg-foreground/[0.06]" />
         <div className="absolute bottom-0 right-0 h-[360px] w-[360px] rounded-full bg-foreground/[0.02] blur-[120px] dark:bg-foreground/[0.05]" />
         <div className="absolute top-1/2 left-1/4 h-[400px] w-[400px] rounded-full bg-primary/[0.02] blur-[150px] dark:bg-primary/[0.05]" />
@@ -275,7 +281,7 @@ export function GlowyWavesHero() {
           {/* Available badge */}
           <motion.div
             variants={itemVariants}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/40 bg-background/60 px-4 py-2 text-sm font-medium text-foreground/70 backdrop-blur dark:border-border/60 dark:bg-background/70 dark:text-foreground/80"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/40 bg-background/70 px-4 py-2 text-sm font-medium text-foreground/70 sm:backdrop-blur dark:border-border/60 dark:bg-background/80 dark:text-foreground/80"
           >
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             Disponible para nuevos proyectos
@@ -319,7 +325,7 @@ export function GlowyWavesHero() {
             <Button
               size="lg"
               variant="outline"
-              className="rounded-full border-border/50 bg-background/60 px-8 text-base font-semibold backdrop-blur hover:bg-background/80 dark:border-border/50 dark:bg-background/40 dark:hover:bg-background/60"
+              className="rounded-full border-border/50 bg-background/70 px-8 text-base font-semibold sm:backdrop-blur hover:bg-background/80 dark:border-border/50 dark:bg-background/50 dark:hover:bg-background/60"
               asChild
             >
               <a href="#contact">Contacto</a>
@@ -334,7 +340,7 @@ export function GlowyWavesHero() {
             {portfolioPills.map((pill) => (
               <li
                 key={pill}
-                className="rounded-full border border-border/40 bg-background/60 px-4 py-2 backdrop-blur dark:border-border/60 dark:bg-background/70"
+                className="rounded-full border border-border/40 bg-background/70 px-4 py-2 sm:backdrop-blur dark:border-border/60 dark:bg-background/80"
               >
                 {pill}
               </li>
@@ -344,7 +350,7 @@ export function GlowyWavesHero() {
           {/* Stats */}
           <motion.div
             variants={statsVariants}
-            className="grid gap-4 rounded-2xl border border-border/30 bg-background/60 p-6 backdrop-blur-sm dark:border-border/50 dark:bg-background/70 sm:grid-cols-3"
+            className="grid gap-4 rounded-2xl border border-border/30 bg-background/70 p-6 sm:backdrop-blur-sm dark:border-border/50 dark:bg-background/80 sm:grid-cols-3"
           >
             {heroStats.map((stat) => (
               <motion.div key={stat.label} variants={itemVariants} className="space-y-1">

@@ -66,6 +66,8 @@ export default function IntegrationsSection({
               <img
                 src={tool.logo}
                 alt={tool.name}
+                loading="lazy"
+                decoding="async"
                 className="w-9 h-9 object-contain"
               />
             </div>

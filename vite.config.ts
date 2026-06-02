@@ -9,4 +9,21 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          motion: ['framer-motion'],
+          radix: [
+            '@radix-ui/react-accordion',
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-navigation-menu',
+            '@radix-ui/react-slot',
+            '@radix-ui/react-label',
+          ],
+        },
+      },
+    },
+  },
 })
