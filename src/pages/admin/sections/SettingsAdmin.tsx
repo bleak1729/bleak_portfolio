@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react'
-import { Save, CheckCircle } from 'lucide-react'
+import { Save, CheckCircle, Database, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { getSettings, saveSettings, SiteSettings } from '@/lib/firestore'
+import { seedInitialData } from '@/lib/seed'
 
 export default function SettingsAdmin() {
   const [form, setForm] = useState<SiteSettings>({ email: '', linkedin: '' })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [seeding, setSeeding] = useState(false)
+  const [seedResult, setSeedResult] = useState<string>('')
 
   useEffect(() => {
     getSettings().then(s => {
@@ -26,12 +29,29 @@ export default function SettingsAdmin() {
     setTimeout(() => setSaved(false), 3000)
   }
 
+  const handleSeed = async () => {
+    if (!confirm('¿Cargar los datos iniciales en Firestore? Solo se insertan si las colecciones están vacías.')) return
+    setSeeding(true)
+    setSeedResult('')
+    try {
+      const { seeded, skipped } = await seedInitialData()
+      const parts = []
+      if (seeded.length) parts.push(`✅ Cargado: ${seeded.join(', ')}`)
+      if (skipped.length) parts.push(`⏭ Ya tenía datos: ${skipped.join(', ')}`)
+      setSeedResult(parts.join(' · '))
+    } catch (e: unknown) {
+      setSeedResult(`❌ Error: ${e instanceof Error ? e.message : 'desconocido'}`)
+    } finally {
+      setSeeding(false)
+    }
+  }
+
   return (
     <div>
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-foreground">Configuración</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Datos de contacto visibles en el portfolio
+          Datos de contacto y herramientas de base de datos
         </p>
       </div>
 
@@ -39,6 +59,7 @@ export default function SettingsAdmin() {
         <div className="text-center py-20 text-muted-foreground">Cargando…</div>
       ) : (
         <div className="max-w-lg space-y-6">
+          {/* Contact settings */}
           <div className="rounded-2xl border border-border bg-card p-6 space-y-5">
             <h3 className="font-semibold text-foreground">Datos de contacto</h3>
 
@@ -74,6 +95,35 @@ export default function SettingsAdmin() {
               : <><Save className="w-4 h-4" /> {saving ? 'Guardando…' : 'Guardar cambios'}</>
             }
           </Button>
+
+          {/* Seed section */}
+          <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
+            <div>
+              <h3 className="font-semibold text-foreground">Datos iniciales</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Carga los proyectos y servicios de ejemplo en Firestore.
+                Solo se insertan si la colección está vacía — no duplica datos.
+              </p>
+            </div>
+
+            <Button
+              variant="outline"
+              onClick={handleSeed}
+              disabled={seeding}
+              className="gap-2"
+            >
+              {seeding
+                ? <><Loader2 className="w-4 h-4 animate-spin" /> Cargando…</>
+                : <><Database className="w-4 h-4" /> Cargar datos iniciales</>
+              }
+            </Button>
+
+            {seedResult && (
+              <p className="text-sm text-muted-foreground bg-muted/50 rounded-lg px-3 py-2">
+                {seedResult}
+              </p>
+            )}
+          </div>
         </div>
       )}
     </div>
