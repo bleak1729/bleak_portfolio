@@ -47,7 +47,7 @@ export default {
       },
       fontFamily: {
         sans: ['DM Sans', 'system-ui', 'sans-serif'],
-        display: ['Syne', 'system-ui', 'sans-serif'],
+        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
       },
       keyframes: {
         'accordion-down': {
