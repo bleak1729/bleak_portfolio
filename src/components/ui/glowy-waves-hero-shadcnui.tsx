@@ -294,7 +294,7 @@ export function GlowyWavesHero() {
           >
             Procesos de negocio, Páginas Web y SaaS con{" "}
             <span className="bg-gradient-to-r from-primary via-primary/70 to-accent bg-clip-text text-transparent">
-              Power Platform, React e IA
+              Power Platform y React
             </span>
           </motion.h1>
 
