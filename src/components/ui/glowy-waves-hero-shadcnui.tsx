@@ -271,7 +271,7 @@ export function GlowyWavesHero() {
         <div className="absolute top-1/2 left-1/4 h-[400px] w-[400px] rounded-full bg-primary/[0.02] blur-[150px] dark:bg-primary/[0.05]" />
       </div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center px-6 py-24 text-center md:px-8 lg:px-12">
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center px-5 pt-28 pb-16 text-center sm:px-8 md:px-8 md:py-24 lg:px-12">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -281,7 +281,7 @@ export function GlowyWavesHero() {
           {/* Available badge */}
           <motion.div
             variants={itemVariants}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/40 bg-background/70 px-4 py-2 text-sm font-medium text-foreground/70 sm:backdrop-blur dark:border-border/60 dark:bg-background/80 dark:text-foreground/80"
+            className="mb-5 inline-flex items-center gap-2 rounded-full border border-border/40 bg-background/70 px-3 py-1.5 text-xs font-medium text-foreground/70 sm:px-4 sm:py-2 sm:text-sm sm:backdrop-blur dark:border-border/60 dark:bg-background/80 dark:text-foreground/80"
           >
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             Disponible para nuevos proyectos
@@ -290,7 +290,7 @@ export function GlowyWavesHero() {
           {/* Headline */}
           <motion.h1
             variants={itemVariants}
-            className="mb-6 text-5xl font-extrabold tracking-tight text-foreground md:text-6xl lg:text-7xl leading-tight font-display"
+            className="mb-5 text-[2rem] font-extrabold tracking-tight text-foreground leading-[1.15] sm:text-5xl md:text-6xl lg:text-7xl font-display"
           >
             Procesos de negocio, Páginas Web y SaaS con{" "}
             <span className="bg-gradient-to-r from-primary via-primary/70 to-accent bg-clip-text text-transparent">
@@ -301,7 +301,7 @@ export function GlowyWavesHero() {
           {/* Description */}
           <motion.p
             variants={itemVariants}
-            className="mx-auto mb-10 max-w-2xl text-lg text-foreground/70 md:text-xl leading-relaxed"
+            className="mx-auto mb-8 max-w-2xl text-base text-foreground/70 sm:text-lg md:text-xl leading-relaxed"
           >
             Diseño y entrego aplicaciones de negocio, páginas web y productos SaaS
             — sobre Microsoft Power Platform, React y Azure, siempre medidos con ROI real.
@@ -310,11 +310,11 @@ export function GlowyWavesHero() {
           {/* CTAs */}
           <motion.div
             variants={itemVariants}
-            className="mb-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+            className="mb-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
           >
             <Button
               size="lg"
-              className="group gap-2 rounded-full px-8 text-base font-semibold"
+              className="group gap-2 rounded-full px-7 text-sm font-semibold sm:px-8 sm:text-base w-full sm:w-auto"
               asChild
             >
               <a href="#projects">
@@ -325,43 +325,45 @@ export function GlowyWavesHero() {
             <Button
               size="lg"
               variant="outline"
-              className="rounded-full border-border/50 bg-background/70 px-8 text-base font-semibold sm:backdrop-blur hover:bg-background/80 dark:border-border/50 dark:bg-background/50 dark:hover:bg-background/60"
+              className="rounded-full border-border/50 bg-background/70 px-7 text-sm font-semibold sm:px-8 sm:text-base sm:backdrop-blur hover:bg-background/80 dark:border-border/50 dark:bg-background/50 dark:hover:bg-background/60 w-full sm:w-auto"
               asChild
             >
               <a href="#contact">Contacto</a>
             </Button>
           </motion.div>
 
-          {/* Pills */}
+          {/* Pills — 2-col grid on mobile, flex on larger */}
           <motion.ul
             variants={itemVariants}
-            className="mb-12 flex flex-wrap items-center justify-center gap-3 text-xs font-medium uppercase tracking-widest text-foreground/60"
+            className="mb-8 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-3 text-xs font-medium uppercase tracking-widest text-foreground/60"
           >
             {portfolioPills.map((pill) => (
               <li
                 key={pill}
-                className="rounded-full border border-border/40 bg-background/70 px-4 py-2 sm:backdrop-blur dark:border-border/60 dark:bg-background/80"
+                className="flex items-center justify-center rounded-full border border-border/40 bg-background/70 px-3 py-2 sm:px-4 sm:backdrop-blur dark:border-border/60 dark:bg-background/80"
               >
                 {pill}
               </li>
             ))}
           </motion.ul>
 
-          {/* Stats */}
+          {/* Stats — row on mobile with dividers, grid on sm+ */}
           <motion.div
             variants={statsVariants}
-            className="grid gap-4 rounded-2xl border border-border/30 bg-background/70 p-6 sm:backdrop-blur-sm dark:border-border/50 dark:bg-background/80 sm:grid-cols-3"
+            className="rounded-2xl border border-border/30 bg-background/70 sm:backdrop-blur-sm dark:border-border/50 dark:bg-background/80 overflow-hidden"
           >
-            {heroStats.map((stat) => (
-              <motion.div key={stat.label} variants={itemVariants} className="space-y-1">
-                <div className="text-3xl font-extrabold text-foreground">
-                  {stat.value}
-                </div>
-                <div className="text-xs uppercase tracking-widest text-foreground/50 dark:text-foreground/60">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
+            <div className="grid grid-cols-3 divide-x divide-border/30 sm:gap-0 p-4 sm:p-6">
+              {heroStats.map((stat) => (
+                <motion.div key={stat.label} variants={itemVariants} className="flex flex-col items-center gap-0.5 px-2 sm:px-4">
+                  <div className="text-2xl font-extrabold text-foreground sm:text-3xl">
+                    {stat.value}
+                  </div>
+                  <div className="text-[10px] sm:text-xs uppercase tracking-widest text-foreground/50 dark:text-foreground/60 text-center leading-tight">
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         </motion.div>
       </div>

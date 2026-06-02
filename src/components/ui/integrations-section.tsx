@@ -28,30 +28,30 @@ export default function IntegrationsSection({
   tools = [],
 }: IntegrationsSectionProps) {
   return (
-    <section id="stack" className="py-24 px-6 bg-muted/40">
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center border border-border bg-card rounded-3xl p-8 md:p-12">
+    <section id="stack" className="py-16 md:py-24 px-5 sm:px-6 bg-muted/40">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 md:gap-12 items-center border border-border bg-card rounded-3xl p-5 sm:p-8 md:p-12">
 
         {/* Left — text */}
         <FadeUp>
           <div className="section-label">{sectionLabel}</div>
-          <h2 className="text-4xl font-extrabold text-foreground mt-2 mb-4 leading-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mt-2 mb-4 leading-tight">
             {heading}
           </h2>
-          <p className="text-muted-foreground mb-8 text-lg leading-relaxed">
+          <p className="text-sm sm:text-base text-muted-foreground mb-7 sm:text-lg leading-relaxed">
             {description}
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button asChild className="rounded-full px-6">
+            <Button asChild className="rounded-full px-6 w-full sm:w-auto">
               <a href={primaryLink}>{primaryText}</a>
             </Button>
-            <Button asChild variant="outline" className="rounded-full px-6">
+            <Button asChild variant="outline" className="rounded-full px-6 w-full sm:w-auto">
               <a href={secondaryLink}>{secondaryText}</a>
             </Button>
           </div>
         </FadeUp>
 
         {/* Right — logo grid with stagger */}
-        <StaggerContainer className="grid grid-cols-5 gap-4 items-center justify-items-center">
+        <StaggerContainer className="grid grid-cols-4 gap-4 sm:grid-cols-5 items-center justify-items-center">
           {tools.map((tool, idx) => (
             <StaggerItem key={idx}>
               <div

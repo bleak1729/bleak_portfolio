@@ -75,14 +75,14 @@ export const Contact2 = ({
   };
 
   return (
-    <section id={sectionId} className="py-24">
-      <div className="container max-w-6xl mx-auto px-6">
+    <section id={sectionId} className="py-16 md:py-24">
+      <div className="container max-w-6xl mx-auto px-5 sm:px-6">
         <div className="mx-auto flex max-w-screen-xl flex-col justify-between gap-10 lg:flex-row lg:gap-20">
           {/* ── Left: info ── */}
           <FadeUp className="mx-auto flex max-w-sm flex-col justify-between gap-10">
             <div className="text-center lg:text-left">
               <div className="section-label mb-4">Contacto</div>
-              <h2 className="mb-3 text-4xl font-extrabold text-foreground leading-tight lg:text-5xl">
+              <h2 className="mb-3 text-3xl font-extrabold text-foreground leading-tight sm:text-4xl lg:text-5xl">
                 {title}
               </h2>
               <p className="text-muted-foreground leading-relaxed">{description}</p>

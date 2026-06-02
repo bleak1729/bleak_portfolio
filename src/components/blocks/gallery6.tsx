@@ -66,12 +66,12 @@ const Gallery6 = ({
   }, [carouselApi, items]);
 
   return (
-    <section id={sectionId} className="py-24">
-      <div className="container max-w-6xl mx-auto px-6">
+    <section id={sectionId} className="py-16 md:py-24">
+      <div className="container max-w-6xl mx-auto px-5 sm:px-6">
         <div className="mb-8 flex flex-col justify-between md:mb-14 md:flex-row md:items-end lg:mb-16">
           <FadeUp>
             {sectionLabel && <div className="section-label">{sectionLabel}</div>}
-            <h2 className="mb-3 text-4xl font-extrabold text-foreground md:mb-4">
+            <h2 className="mb-3 text-3xl font-extrabold text-foreground sm:text-4xl md:mb-4">
               {heading}
             </h2>
             <a

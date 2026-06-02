@@ -36,25 +36,25 @@ const howIWork = [
 
 export default function About() {
   return (
-    <section id="about" className="py-24">
-      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 px-8 md:grid-cols-2">
+    <section id="about" className="py-16 md:py-24">
+      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-10 px-5 sm:px-8 md:grid-cols-2 md:gap-12">
         {/* ── Left: Bio ── */}
         <ContainerStagger>
           <ContainerAnimated className="section-label mb-1">
             Acerca
           </ContainerAnimated>
 
-          <ContainerAnimated className="text-4xl font-extrabold text-foreground leading-tight md:text-[2.4rem] tracking-tight mb-6 font-display">
+          <ContainerAnimated className="text-3xl font-extrabold text-foreground leading-tight sm:text-4xl md:text-[2.4rem] tracking-tight mb-5 font-display">
             Desarrollador de Aplicaciones de Negocio y consultor en automatización
           </ContainerAnimated>
 
-          <ContainerAnimated className="text-muted-foreground leading-relaxed mb-5">
+          <ContainerAnimated className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4">
             Diseño y entrego soluciones de nivel productivo sobre Microsoft Power Platform,
             páginas web modernas con React / Next.js y productos SaaS end-to-end —
             combinando la velocidad del low-code con el rigor de SQL, Azure e IA.
           </ContainerAnimated>
 
-          <ContainerAnimated className="text-muted-foreground leading-relaxed mb-5">
+          <ContainerAnimated className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4">
             Con experiencia profunda en{" "}
             <strong className="text-foreground">
               Power Apps, Power Automate, SQL Server, Azure, IA, SharePoint e integraciones
@@ -64,11 +64,10 @@ export default function About() {
             que silenciosamente erosionan el margen.
           </ContainerAnimated>
 
-          <ContainerAnimated className="text-muted-foreground leading-relaxed mb-8">
+          <ContainerAnimated className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-7">
             Mi trabajo abarca automatización empresarial, portales y plataformas web, e-commerce
             y productos SaaS — siempre fundamentado en datos limpios, arquitectura gobernada y
-            métricas claras de adopción. Yo escribo el código, me siento con los usuarios y
-            respondo por el resultado.
+            métricas claras de adopción.
           </ContainerAnimated>
 
           <ContainerAnimated>
@@ -76,7 +75,7 @@ export default function About() {
               {skills.map((s) => (
                 <span
                   key={s}
-                  className="text-sm font-medium bg-secondary text-primary border border-primary/20 px-4 py-1.5 rounded-full"
+                  className="text-xs sm:text-sm font-medium bg-secondary text-primary border border-primary/20 px-3 sm:px-4 py-1.5 rounded-full"
                 >
                   {s}
                 </span>
