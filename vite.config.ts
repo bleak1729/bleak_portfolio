@@ -13,7 +13,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
+          vendor: ['react', 'react-dom', 'react-router-dom'],
           motion: ['framer-motion'],
           radix: [
             '@radix-ui/react-accordion',
@@ -22,6 +22,7 @@ export default defineConfig({
             '@radix-ui/react-slot',
             '@radix-ui/react-label',
           ],
+          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
         },
       },
     },

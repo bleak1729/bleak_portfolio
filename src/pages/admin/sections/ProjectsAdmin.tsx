@@ -1,0 +1,165 @@
+import { useEffect, useState } from 'react'
+import { Plus, Pencil, Trash2, Eye, EyeOff } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import ItemFormModal, { ItemFormData } from '@/components/admin/ItemFormModal'
+import {
+  getProjects,
+  addProject,
+  updateProject,
+  deleteProject,
+  Project,
+} from '@/lib/firestore'
+import { cn } from '@/lib/utils'
+
+export default function ProjectsAdmin() {
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
+  const [modal, setModal] = useState<{ open: boolean; item?: Project }>({ open: false })
+
+  const load = async () => {
+    setLoading(true)
+    setProjects(await getProjects())
+    setLoading(false)
+  }
+
+  useEffect(() => { load() }, [])
+
+  const handleSave = async (data: ItemFormData) => {
+    const base = {
+      title: data.title,
+      summary: data.summary,
+      url: data.url,
+      image: data.image,
+      tags: data.tags.split(',').map(t => t.trim()).filter(Boolean),
+      result: data.result ?? '',
+      active: data.active,
+      order: data.order,
+    }
+    if (modal.item) {
+      await updateProject(modal.item.id, base, data.imageFile)
+    } else {
+      await addProject({ ...base, imageRef: '' }, data.imageFile)
+    }
+    await load()
+  }
+
+  const toggleActive = async (p: Project) => {
+    await updateProject(p.id, { active: !p.active })
+    await load()
+  }
+
+  const handleDelete = async (p: Project) => {
+    if (!confirm(`¿Eliminar "${p.title}"?`)) return
+    await deleteProject(p.id, p.imageRef)
+    await load()
+  }
+
+  const toFormData = (p: Project): Partial<ItemFormData> => ({
+    title: p.title,
+    summary: p.summary,
+    url: p.url,
+    image: p.image,
+    tags: p.tags.join(', '),
+    result: p.result,
+    active: p.active,
+    order: p.order,
+  })
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground">Proyectos</h2>
+          <p className="text-sm text-muted-foreground mt-1">{projects.length} items en total</p>
+        </div>
+        <Button onClick={() => setModal({ open: true })} className="gap-2">
+          <Plus className="w-4 h-4" /> Nuevo proyecto
+        </Button>
+      </div>
+
+      {loading ? (
+        <div className="text-center py-20 text-muted-foreground">Cargando…</div>
+      ) : (
+        <div className="space-y-3">
+          {projects.map(p => (
+            <div
+              key={p.id}
+              className={cn(
+                'flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-opacity',
+                !p.active && 'opacity-50'
+              )}
+            >
+              {/* Thumbnail */}
+              <div className="shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-muted">
+                <img src={p.image} alt={p.title} className="w-full h-full object-cover" />
+              </div>
+
+              {/* Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-foreground truncate">{p.title}</span>
+                  <span className={cn(
+                    'shrink-0 text-xs px-2 py-0.5 rounded-full font-medium',
+                    p.active
+                      ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                      : 'bg-muted text-muted-foreground'
+                  )}>
+                    {p.active ? 'Activo' : 'Pausado'}
+                  </span>
+                </div>
+                <p className="text-sm text-muted-foreground mt-0.5 line-clamp-1">{p.summary}</p>
+                <div className="flex flex-wrap gap-1 mt-1.5">
+                  {p.tags.map(t => (
+                    <span key={t} className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full border border-border">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={() => toggleActive(p)}
+                  title={p.active ? 'Pausar' : 'Activar'}
+                  className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                >
+                  {p.active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+                <button
+                  onClick={() => setModal({ open: true, item: p })}
+                  title="Editar"
+                  className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                >
+                  <Pencil className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => handleDelete(p)}
+                  title="Eliminar"
+                  className="p-2 rounded-lg text-muted-foreground hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {projects.length === 0 && (
+            <div className="text-center py-20 text-muted-foreground">
+              No hay proyectos. Crea el primero.
+            </div>
+          )}
+        </div>
+      )}
+
+      <ItemFormModal
+        open={modal.open}
+        title={modal.item ? 'Editar proyecto' : 'Nuevo proyecto'}
+        initial={modal.item ? toFormData(modal.item) : undefined}
+        showResult
+        onClose={() => setModal({ open: false })}
+        onSave={handleSave}
+      />
+    </div>
+  )
+}
