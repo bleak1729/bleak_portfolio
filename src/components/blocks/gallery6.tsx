@@ -11,6 +11,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import ItemDetailModal, { DetailItem } from "@/components/ui/item-detail-modal";
+import { FadeUp } from "@/components/ui/fade-up";
 
 interface GalleryItem {
   id: string;
@@ -68,7 +69,7 @@ const Gallery6 = ({
     <section id={sectionId} className="py-24">
       <div className="container max-w-6xl mx-auto px-6">
         <div className="mb-8 flex flex-col justify-between md:mb-14 md:flex-row md:items-end lg:mb-16">
-          <div>
+          <FadeUp>
             {sectionLabel && <div className="section-label">{sectionLabel}</div>}
             <h2 className="mb-3 text-4xl font-extrabold text-foreground md:mb-4">
               {heading}
@@ -80,7 +81,7 @@ const Gallery6 = ({
               {ctaLabel}
               <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
             </a>
-          </div>
+          </FadeUp>
           <div className="mt-8 flex shrink-0 items-center justify-start gap-2">
             <Button
               size="icon"

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { FadeUp } from "@/components/ui/fade-up";
 import { addMessage } from "@/lib/firestore";
 
 interface ContactLink {
@@ -78,7 +79,7 @@ export const Contact2 = ({
       <div className="container max-w-6xl mx-auto px-6">
         <div className="mx-auto flex max-w-screen-xl flex-col justify-between gap-10 lg:flex-row lg:gap-20">
           {/* ── Left: info ── */}
-          <div className="mx-auto flex max-w-sm flex-col justify-between gap-10">
+          <FadeUp className="mx-auto flex max-w-sm flex-col justify-between gap-10">
             <div className="text-center lg:text-left">
               <div className="section-label mb-4">Contacto</div>
               <h2 className="mb-3 text-4xl font-extrabold text-foreground leading-tight lg:text-5xl">
@@ -116,10 +117,10 @@ export const Contact2 = ({
                 </ul>
               </div>
             )}
-          </div>
+          </FadeUp>
 
           {/* ── Right: form ── */}
-          <div className="mx-auto flex w-full max-w-screen-md flex-col gap-5 rounded-2xl border border-border bg-card p-8 shadow-sm lg:p-10">
+          <FadeUp delay={0.15} className="mx-auto flex w-full max-w-screen-md flex-col gap-5 rounded-2xl border border-border bg-card p-8 shadow-sm lg:p-10">
             {sent ? (
               <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
                 <CheckCircle className="w-12 h-12 text-green-500" />
@@ -179,7 +180,7 @@ export const Contact2 = ({
                 </Button>
               </form>
             )}
-          </div>
+          </FadeUp>
         </div>
       </div>
     </section>
