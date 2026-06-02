@@ -2,13 +2,7 @@ import { useEffect, useState } from 'react'
 import { Plus, Pencil, Trash2, Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import ItemFormModal, { ItemFormData } from '@/components/admin/ItemFormModal'
-import {
-  getProjects,
-  addProject,
-  updateProject,
-  deleteProject,
-  Project,
-} from '@/lib/firestore'
+import { getProjects, addProject, updateProject, deleteProject, Project } from '@/lib/firestore'
 import { cn } from '@/lib/utils'
 
 export default function ProjectsAdmin() {
@@ -36,9 +30,9 @@ export default function ProjectsAdmin() {
       order: data.order,
     }
     if (modal.item) {
-      await updateProject(modal.item.id, base, data.imageFile)
+      await updateProject(modal.item.id, base)
     } else {
-      await addProject({ ...base, imageRef: '' }, data.imageFile)
+      await addProject(base)
     }
     await load()
   }
@@ -50,7 +44,7 @@ export default function ProjectsAdmin() {
 
   const handleDelete = async (p: Project) => {
     if (!confirm(`¿Eliminar "${p.title}"?`)) return
-    await deleteProject(p.id, p.imageRef)
+    await deleteProject(p.id)
     await load()
   }
 
@@ -89,14 +83,12 @@ export default function ProjectsAdmin() {
                 !p.active && 'opacity-50'
               )}
             >
-              {/* Thumbnail */}
               <div className="shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-muted">
                 <img src={p.image} alt={p.title} className="w-full h-full object-cover" />
               </div>
 
-              {/* Info */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-semibold text-foreground truncate">{p.title}</span>
                   <span className={cn(
                     'shrink-0 text-xs px-2 py-0.5 rounded-full font-medium',
@@ -117,37 +109,24 @@ export default function ProjectsAdmin() {
                 </div>
               </div>
 
-              {/* Actions */}
               <div className="flex items-center gap-2 shrink-0">
-                <button
-                  onClick={() => toggleActive(p)}
-                  title={p.active ? 'Pausar' : 'Activar'}
-                  className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                >
+                <button onClick={() => toggleActive(p)} title={p.active ? 'Pausar' : 'Activar'}
+                  className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
                   {p.active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
-                <button
-                  onClick={() => setModal({ open: true, item: p })}
-                  title="Editar"
-                  className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                >
+                <button onClick={() => setModal({ open: true, item: p })}
+                  className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
                   <Pencil className="w-4 h-4" />
                 </button>
-                <button
-                  onClick={() => handleDelete(p)}
-                  title="Eliminar"
-                  className="p-2 rounded-lg text-muted-foreground hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 transition-colors"
-                >
+                <button onClick={() => handleDelete(p)}
+                  className="p-2 rounded-lg text-muted-foreground hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 transition-colors">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             </div>
           ))}
-
           {projects.length === 0 && (
-            <div className="text-center py-20 text-muted-foreground">
-              No hay proyectos. Crea el primero.
-            </div>
+            <div className="text-center py-20 text-muted-foreground">No hay proyectos. Crea el primero.</div>
           )}
         </div>
       )}

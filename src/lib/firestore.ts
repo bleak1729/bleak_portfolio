@@ -12,13 +12,7 @@ import {
   serverTimestamp,
   Timestamp,
 } from 'firebase/firestore'
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from 'firebase/storage'
-import { db, storage } from './firebase'
+import { db } from './firebase'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -27,8 +21,7 @@ export interface Project {
   title: string
   summary: string
   url: string
-  image: string
-  imageRef?: string
+  image: string   // base64 data URL or external URL
   tags: string[]
   result?: string
   active: boolean
@@ -41,8 +34,7 @@ export interface Service {
   title: string
   summary: string
   url: string
-  image: string
-  imageRef?: string
+  image: string   // base64 data URL or external URL
   tags: string[]
   active: boolean
   order: number
@@ -64,6 +56,32 @@ export interface SiteSettings {
   linkedin: string
 }
 
+// ─── Image compression (Canvas → base64 JPEG) ────────────────────────────────
+// Max 900 × 600 px, quality 0.82 → typically 60–150 kB, well under Firestore 1 MB limit
+
+export function compressImage(file: File, maxW = 900, maxH = 600, quality = 0.82): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    const url = URL.createObjectURL(file)
+    img.onload = () => {
+      URL.revokeObjectURL(url)
+      let { width, height } = img
+      const ratio = Math.min(maxW / width, maxH / height, 1)
+      width = Math.round(width * ratio)
+      height = Math.round(height * ratio)
+
+      const canvas = document.createElement('canvas')
+      canvas.width = width
+      canvas.height = height
+      const ctx = canvas.getContext('2d')!
+      ctx.drawImage(img, 0, 0, width, height)
+      resolve(canvas.toDataURL('image/jpeg', quality))
+    }
+    img.onerror = reject
+    img.src = url
+  })
+}
+
 // ─── Projects ────────────────────────────────────────────────────────────────
 
 export async function getProjects(): Promise<Project[]> {
@@ -72,38 +90,18 @@ export async function getProjects(): Promise<Project[]> {
   return snap.docs.map(d => ({ id: d.id, ...d.data() } as Project))
 }
 
-export async function addProject(data: Omit<Project, 'id'>, imageFile?: File): Promise<void> {
-  let image = data.image
-  let imageRef = ''
-  if (imageFile) {
-    const result = await uploadImage(imageFile, 'projects')
-    image = result.url
-    imageRef = result.ref
-  }
+export async function addProject(data: Omit<Project, 'id'>): Promise<void> {
   await addDoc(collection(db, 'projects'), {
     ...data,
-    image,
-    imageRef,
     createdAt: serverTimestamp(),
   })
 }
 
-export async function updateProject(
-  id: string,
-  data: Partial<Omit<Project, 'id'>>,
-  imageFile?: File
-): Promise<void> {
-  let updates: Partial<Omit<Project, 'id'>> = { ...data }
-  if (imageFile) {
-    const result = await uploadImage(imageFile, 'projects')
-    updates.image = result.url
-    updates.imageRef = result.ref
-  }
-  await updateDoc(doc(db, 'projects', id), updates)
+export async function updateProject(id: string, data: Partial<Omit<Project, 'id'>>): Promise<void> {
+  await updateDoc(doc(db, 'projects', id), data)
 }
 
-export async function deleteProject(id: string, imageRef?: string): Promise<void> {
-  if (imageRef) await deleteImage(imageRef)
+export async function deleteProject(id: string): Promise<void> {
   await deleteDoc(doc(db, 'projects', id))
 }
 
@@ -115,32 +113,15 @@ export async function getServices(): Promise<Service[]> {
   return snap.docs.map(d => ({ id: d.id, ...d.data() } as Service))
 }
 
-export async function addService(data: Omit<Service, 'id'>, imageFile?: File): Promise<void> {
-  let image = data.image
-  let imageRef = ''
-  if (imageFile) {
-    const result = await uploadImage(imageFile, 'services')
-    image = result.url
-    imageRef = result.ref
-  }
-  await addDoc(collection(db, 'services'), { ...data, image, imageRef })
+export async function addService(data: Omit<Service, 'id'>): Promise<void> {
+  await addDoc(collection(db, 'services'), data)
 }
 
-export async function updateService(
-  id: string,
-  data: Partial<Omit<Service, 'id'>>,
-  imageFile?: File
-): Promise<void> {
-  let updates = { ...data }
-  if (imageFile) {
-    const result = await uploadImage(imageFile, 'services')
-    updates = { ...updates, image: result.url, imageRef: result.ref }
-  }
-  await updateDoc(doc(db, 'services', id), updates)
+export async function updateService(id: string, data: Partial<Omit<Service, 'id'>>): Promise<void> {
+  await updateDoc(doc(db, 'services', id), data)
 }
 
-export async function deleteService(id: string, imageRef?: string): Promise<void> {
-  if (imageRef) await deleteImage(imageRef)
+export async function deleteService(id: string): Promise<void> {
   await deleteDoc(doc(db, 'services', id))
 }
 
@@ -178,25 +159,4 @@ export async function getSettings(): Promise<SiteSettings> {
 
 export async function saveSettings(data: SiteSettings): Promise<void> {
   await setDoc(doc(db, 'settings', 'general'), data)
-}
-
-// ─── Storage helpers ─────────────────────────────────────────────────────────
-
-async function uploadImage(
-  file: File,
-  folder: string
-): Promise<{ url: string; ref: string }> {
-  const path = `${folder}/${Date.now()}_${file.name}`
-  const storageRef = ref(storage, path)
-  await uploadBytes(storageRef, file)
-  const url = await getDownloadURL(storageRef)
-  return { url, ref: path }
-}
-
-async function deleteImage(refPath: string): Promise<void> {
-  try {
-    await deleteObject(ref(storage, refPath))
-  } catch {
-    // file may not exist, ignore
-  }
 }

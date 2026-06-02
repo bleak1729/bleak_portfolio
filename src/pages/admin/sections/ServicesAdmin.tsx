@@ -2,13 +2,7 @@ import { useEffect, useState } from 'react'
 import { Plus, Pencil, Trash2, Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import ItemFormModal, { ItemFormData } from '@/components/admin/ItemFormModal'
-import {
-  getServices,
-  addService,
-  updateService,
-  deleteService,
-  Service,
-} from '@/lib/firestore'
+import { getServices, addService, updateService, deleteService, Service } from '@/lib/firestore'
 import { cn } from '@/lib/utils'
 
 export default function ServicesAdmin() {
@@ -35,9 +29,9 @@ export default function ServicesAdmin() {
       order: data.order,
     }
     if (modal.item) {
-      await updateService(modal.item.id, base, data.imageFile)
+      await updateService(modal.item.id, base)
     } else {
-      await addService({ ...base, imageRef: '' }, data.imageFile)
+      await addService(base)
     }
     await load()
   }
@@ -49,7 +43,7 @@ export default function ServicesAdmin() {
 
   const handleDelete = async (s: Service) => {
     if (!confirm(`¿Eliminar "${s.title}"?`)) return
-    await deleteService(s.id, s.imageRef)
+    await deleteService(s.id)
     await load()
   }
 
@@ -92,7 +86,7 @@ export default function ServicesAdmin() {
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-semibold text-foreground truncate">{s.title}</span>
                   <span className={cn(
                     'shrink-0 text-xs px-2 py-0.5 rounded-full font-medium',
@@ -114,33 +108,23 @@ export default function ServicesAdmin() {
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
-                <button
-                  onClick={() => toggleActive(s)}
-                  title={s.active ? 'Pausar' : 'Activar'}
-                  className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                >
+                <button onClick={() => toggleActive(s)} title={s.active ? 'Pausar' : 'Activar'}
+                  className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
                   {s.active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
-                <button
-                  onClick={() => setModal({ open: true, item: s })}
-                  className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                >
+                <button onClick={() => setModal({ open: true, item: s })}
+                  className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
                   <Pencil className="w-4 h-4" />
                 </button>
-                <button
-                  onClick={() => handleDelete(s)}
-                  className="p-2 rounded-lg text-muted-foreground hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 transition-colors"
-                >
+                <button onClick={() => handleDelete(s)}
+                  className="p-2 rounded-lg text-muted-foreground hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 transition-colors">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             </div>
           ))}
-
           {services.length === 0 && (
-            <div className="text-center py-20 text-muted-foreground">
-              No hay servicios. Crea el primero.
-            </div>
+            <div className="text-center py-20 text-muted-foreground">No hay servicios. Crea el primero.</div>
           )}
         </div>
       )}

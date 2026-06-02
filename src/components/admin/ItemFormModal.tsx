@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
-import { X, Upload, Image as ImageIcon } from 'lucide-react'
+import { X, Upload, Image as ImageIcon, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { compressImage } from '@/lib/firestore'
 import { cn } from '@/lib/utils'
 
 export interface ItemFormData {
   title: string
   summary: string
   url: string
-  image: string          // current URL (existing or preview)
-  imageFile?: File       // new file to upload
-  tags: string           // comma-separated string in form
-  result?: string        // projects only
+  image: string       // base64 or external URL
+  tags: string        // comma-separated
+  result?: string     // projects only
   active: boolean
   order: number
 }
@@ -24,7 +24,7 @@ interface ItemFormModalProps {
   onSave: (data: ItemFormData) => Promise<void>
   initial?: Partial<ItemFormData>
   title: string
-  showResult?: boolean   // true for projects
+  showResult?: boolean
 }
 
 const empty: ItemFormData = {
@@ -48,7 +48,9 @@ export default function ItemFormModal({
 }: ItemFormModalProps) {
   const [form, setForm] = useState<ItemFormData>({ ...empty })
   const [saving, setSaving] = useState(false)
+  const [compressing, setCompressing] = useState(false)
   const [preview, setPreview] = useState<string>('')
+  const [imgSize, setImgSize] = useState<string>('')
   const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -56,6 +58,7 @@ export default function ItemFormModal({
       const merged = { ...empty, ...initial }
       setForm(merged)
       setPreview(merged.image || '')
+      setImgSize('')
     }
   }, [open, initial])
 
@@ -64,13 +67,28 @@ export default function ItemFormModal({
   const set = (field: keyof ItemFormData, value: unknown) =>
     setForm(f => ({ ...f, [field]: value }))
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    set('imageFile', file)
-    const url = URL.createObjectURL(file)
-    setPreview(url)
+    setCompressing(true)
+    try {
+      const base64 = await compressImage(file)
+      // Show approx size in kB
+      const kb = Math.round((base64.length * 3) / 4 / 1024)
+      setImgSize(`${kb} kB`)
+      set('image', base64)
+      setPreview(base64)
+    } finally {
+      setCompressing(false)
+    }
+    // Reset input so same file can be reselected
+    e.target.value = ''
+  }
+
+  const handleUrlChange = (url: string) => {
     set('image', url)
+    setPreview(url)
+    setImgSize('')
   }
 
   const handleSave = async () => {
@@ -101,39 +119,49 @@ export default function ItemFormModal({
           <div>
             <Label className="mb-2 block">Imagen</Label>
             <div
-              onClick={() => fileRef.current?.click()}
+              onClick={() => !compressing && fileRef.current?.click()}
               className={cn(
                 'relative flex h-44 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-border transition-colors hover:border-primary',
-                preview && 'border-solid border-transparent'
+                preview && 'border-solid border-transparent',
+                compressing && 'pointer-events-none'
               )}
             >
-              {preview ? (
-                <img src={preview} alt="preview" className="h-full w-full object-cover" />
+              {compressing ? (
+                <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                  <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                  <span className="text-sm">Comprimiendo imagen…</span>
+                </div>
+              ) : preview ? (
+                <>
+                  <img src={preview} alt="preview" className="h-full w-full object-cover" />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity">
+                    <Upload className="w-8 h-8 text-white" />
+                  </div>
+                </>
               ) : (
                 <div className="flex flex-col items-center gap-2 text-muted-foreground">
                   <ImageIcon className="w-10 h-10" />
                   <span className="text-sm">Clic para subir imagen</span>
-                </div>
-              )}
-              {preview && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity">
-                  <Upload className="w-8 h-8 text-white" />
+                  <span className="text-xs">Se comprime automáticamente</span>
                 </div>
               )}
             </div>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+
+            {imgSize && (
+              <p className="mt-1 text-xs text-green-600 dark:text-green-400 font-medium">
+                ✓ Imagen comprimida · {imgSize} almacenados en Firestore
+              </p>
+            )}
+
             <p className="mt-1.5 text-xs text-muted-foreground">
-              O pega una URL directamente abajo
+              O pega una URL externa directamente
             </p>
             <Input
               className="mt-1.5"
-              placeholder="https://..."
-              value={form.imageFile ? '' : form.image}
-              onChange={e => {
-                set('image', e.target.value)
-                set('imageFile', undefined)
-                setPreview(e.target.value)
-              }}
+              placeholder="https://images.unsplash.com/..."
+              value={preview.startsWith('data:') ? '' : preview}
+              onChange={e => handleUrlChange(e.target.value)}
             />
           </div>
 
@@ -156,7 +184,7 @@ export default function ItemFormModal({
               rows={3}
               value={form.summary}
               onChange={e => set('summary', e.target.value)}
-              placeholder="Breve descripción..."
+              placeholder="Breve descripción…"
             />
           </div>
 
@@ -191,7 +219,7 @@ export default function ItemFormModal({
               id="item-url"
               value={form.url}
               onChange={e => set('url', e.target.value)}
-              placeholder="#contact o https://..."
+              placeholder="#contact o https://…"
             />
           </div>
 
@@ -230,10 +258,13 @@ export default function ItemFormModal({
 
         {/* Footer */}
         <div className="flex justify-end gap-3 px-6 py-4 border-t border-border">
-          <Button variant="outline" onClick={onClose} disabled={saving}>
+          <Button variant="outline" onClick={onClose} disabled={saving || compressing}>
             Cancelar
           </Button>
-          <Button onClick={handleSave} disabled={saving || !form.title.trim()}>
+          <Button
+            onClick={handleSave}
+            disabled={saving || compressing || !form.title.trim()}
+          >
             {saving ? 'Guardando…' : 'Guardar'}
           </Button>
         </div>

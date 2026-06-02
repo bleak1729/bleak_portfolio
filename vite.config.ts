@@ -22,7 +22,7 @@ export default defineConfig({
             '@radix-ui/react-slot',
             '@radix-ui/react-label',
           ],
-          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
+          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
         },
       },
     },
