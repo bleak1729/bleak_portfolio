@@ -60,7 +60,7 @@ export default function AdminDashboard() {
       )}>
         {/* Brand */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-          <Logo />
+          <Logo className="w-8 h-8 object-contain" typeClassName="text-sm" />
           <button
             onClick={() => setSidebarOpen(false)}
             className="md:hidden text-muted-foreground hover:text-foreground"
