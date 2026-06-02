@@ -42,16 +42,26 @@ const Gallery6 = ({
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
+  // Update scroll buttons whenever the API is ready or items change
   useEffect(() => {
     if (!carouselApi) return;
+
     const updateSelection = () => {
       setCanScrollPrev(carouselApi.canScrollPrev());
       setCanScrollNext(carouselApi.canScrollNext());
     };
+
+    // Reinitialize when items arrive after async load, then refresh state
+    carouselApi.reInit();
     updateSelection();
+
     carouselApi.on("select", updateSelection);
-    return () => { carouselApi.off("select", updateSelection) };
-  }, [carouselApi]);
+    carouselApi.on("reInit", updateSelection);
+    return () => {
+      carouselApi.off("select", updateSelection);
+      carouselApi.off("reInit", updateSelection);
+    };
+  }, [carouselApi, items]);
 
   return (
     <section id={sectionId} className="py-24">
