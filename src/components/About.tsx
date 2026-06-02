@@ -11,26 +11,22 @@ const howIWork = [
   {
     step: "01",
     label: "Descubrir el proceso real, no el documentado",
-    image:
-      "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80&auto=format&fit=crop",
+    image: "/about/01.jpeg",
   },
   {
     step: "02",
     label: "Diseñar con gobierno, seguridad y escala",
-    image:
-      "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=600&q=80&auto=format&fit=crop",
+    image: "/about/02.jpeg",
   },
   {
     step: "03",
     label: "Entregar iterativamente con el equipo en la sala",
-    image:
-      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80&auto=format&fit=crop",
+    image: "/about/03.jpeg",
   },
   {
     step: "04",
     label: "Medir adopción y ROI desde el día uno",
-    image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80&auto=format&fit=crop",
+    image: "/about/04.jpeg",
   },
 ];
 
