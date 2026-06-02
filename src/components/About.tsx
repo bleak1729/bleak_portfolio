@@ -44,7 +44,7 @@ export default function About() {
             Acerca
           </ContainerAnimated>
 
-          <ContainerAnimated className="text-4xl font-extrabold text-foreground leading-tight md:text-[2.4rem] tracking-tight mb-6">
+          <ContainerAnimated className="text-4xl font-extrabold text-foreground leading-tight md:text-[2.4rem] tracking-tight mb-6 font-display">
             Desarrollador de Aplicaciones de Negocio y consultor en automatización
           </ContainerAnimated>
 

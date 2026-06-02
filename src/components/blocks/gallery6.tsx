@@ -146,7 +146,7 @@ const Gallery6 = ({
                   )}
 
                   {/* Title */}
-                  <div className="mb-2 line-clamp-2 break-words pt-4 text-lg font-semibold text-foreground md:mb-3 md:text-xl lg:text-2xl">
+                  <div className="mb-2 line-clamp-2 break-words pt-4 text-lg font-semibold text-foreground md:mb-3 md:text-xl lg:text-2xl font-display">
                     {item.title}
                   </div>
 

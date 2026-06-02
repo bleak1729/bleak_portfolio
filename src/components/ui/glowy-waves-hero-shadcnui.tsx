@@ -290,7 +290,7 @@ export function GlowyWavesHero() {
           {/* Headline */}
           <motion.h1
             variants={itemVariants}
-            className="mb-6 text-5xl font-extrabold tracking-tight text-foreground md:text-6xl lg:text-7xl leading-tight"
+            className="mb-6 text-5xl font-extrabold tracking-tight text-foreground md:text-6xl lg:text-7xl leading-tight font-display"
           >
             Procesos de negocio, Páginas Web y SaaS con{" "}
             <span className="bg-gradient-to-r from-primary via-primary/70 to-accent bg-clip-text text-transparent">
