@@ -33,8 +33,14 @@ export default function AdminLogin() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <Logo />
+        <div className="flex flex-col items-center gap-3 mb-8">
+          <img src="/Logo0.png" alt="Bleak's Productions" className="w-24 h-24 object-contain" />
+          <span
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            className="text-xl font-bold uppercase tracking-wide text-foreground whitespace-nowrap"
+          >
+            Bleak's Productions
+          </span>
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
