@@ -19,6 +19,10 @@ const stackTools = [
     logo: 'https://upload.wikimedia.org/wikipedia/commons/c/cf/New_Power_BI_Logo.svg',
   },
   {
+    name: 'SharePoint',
+    logo: '/icon-sharepoint.svg',
+  },
+  {
     name: 'SQL Server',
     logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg',
   },
@@ -29,10 +33,6 @@ const stackTools = [
   {
     name: 'Azure OpenAI',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg',
-  },
-  {
-    name: 'SharePoint',
-    logo: '/icon-sharepoint.svg',
   },
   {
     name: 'SAP',
