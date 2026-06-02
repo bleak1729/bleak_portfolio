@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="10" fill="#0066FF"/>
+  <!-- Power Automate: circular flow arrow -->
+  <path d="M32 14 A18 18 0 1 1 14 32" stroke="white" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <polygon points="12,26 14,34 20,28" fill="white"/>
+  <!-- Arrow head -->
+  <polygon points="30,8 34,8 32,15" fill="white"/>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="10" fill="#5C2D91"/>
+  <!-- Dataverse: stacked data layers (simplified) -->
+  <ellipse cx="32" cy="20" rx="18" ry="7" fill="none" stroke="white" stroke-width="3"/>
+  <path d="M14 20 Q14 32 32 32 Q50 32 50 20" fill="none" stroke="white" stroke-width="3"/>
+  <path d="M14 32 Q14 44 32 44 Q50 44 50 32" fill="none" stroke="white" stroke-width="3"/>
+</svg>

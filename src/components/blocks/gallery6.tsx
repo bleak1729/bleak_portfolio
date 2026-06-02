@@ -1,0 +1,169 @@
+"use client";
+
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+
+interface GalleryItem {
+  id: string;
+  title: string;
+  summary: string;
+  url: string;
+  image: string;
+  tags?: string[];
+  result?: string;
+}
+
+interface Gallery6Props {
+  heading?: string;
+  demoUrl?: string;
+  items?: GalleryItem[];
+  sectionId?: string;
+  sectionLabel?: string;
+  ctaLabel?: string;
+}
+
+const Gallery6 = ({
+  heading = "Gallery",
+  demoUrl = "#",
+  items = [],
+  sectionId = "gallery",
+  sectionLabel,
+  ctaLabel = "Agendar consulta",
+}: Gallery6Props) => {
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  useEffect(() => {
+    if (!carouselApi) return;
+    const updateSelection = () => {
+      setCanScrollPrev(carouselApi.canScrollPrev());
+      setCanScrollNext(carouselApi.canScrollNext());
+    };
+    updateSelection();
+    carouselApi.on("select", updateSelection);
+    return () => { carouselApi.off("select", updateSelection) };
+  }, [carouselApi]);
+
+  return (
+    <section id={sectionId} className="py-24">
+      <div className="container max-w-6xl mx-auto px-6">
+        <div className="mb-8 flex flex-col justify-between md:mb-14 md:flex-row md:items-end lg:mb-16">
+          <div>
+            {sectionLabel && <div className="section-label">{sectionLabel}</div>}
+            <h2 className="mb-3 text-4xl font-extrabold text-foreground md:mb-4">
+              {heading}
+            </h2>
+            <a
+              href={demoUrl}
+              className="group flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors md:text-base"
+            >
+              {ctaLabel}
+              <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+            </a>
+          </div>
+          <div className="mt-8 flex shrink-0 items-center justify-start gap-2">
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => carouselApi?.scrollPrev()}
+              disabled={!canScrollPrev}
+              className="disabled:pointer-events-auto rounded-full"
+            >
+              <ArrowLeft className="size-5" />
+            </Button>
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => carouselApi?.scrollNext()}
+              disabled={!canScrollNext}
+              className="disabled:pointer-events-auto rounded-full"
+            >
+              <ArrowRight className="size-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full">
+        <Carousel
+          setApi={setCarouselApi}
+          opts={{
+            breakpoints: {
+              "(max-width: 768px)": { dragFree: true },
+            },
+          }}
+          className="relative left-[-1rem]"
+        >
+          <CarouselContent className="-mr-4 ml-8 2xl:ml-[max(8rem,calc(50vw-700px+1rem))] 2xl:mr-[max(0rem,calc(50vw-700px-1rem))]">
+            {items.map((item) => (
+              <CarouselItem key={item.id} className="pl-4 md:max-w-[452px]">
+                <a href={item.url} className="group flex flex-col justify-between">
+                  {/* Image */}
+                  <div className="flex h-56 md:h-64 overflow-clip rounded-xl">
+                    <div className="flex-1">
+                      <div className="relative h-full w-full origin-bottom transition duration-300 group-hover:scale-105">
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="h-full w-full object-cover object-center"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tags */}
+                  {item.tags && (
+                    <div className="flex flex-wrap gap-1.5 pt-4">
+                      {item.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-xs font-medium bg-muted text-muted-foreground px-2.5 py-1 rounded-full border border-border"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Title */}
+                  <div className="mb-2 line-clamp-2 break-words pt-4 text-lg font-semibold text-foreground md:mb-3 md:text-xl lg:text-2xl">
+                    {item.title}
+                  </div>
+
+                  {/* Description */}
+                  <div className="mb-4 line-clamp-3 text-sm text-muted-foreground md:text-base">
+                    {item.summary}
+                  </div>
+
+                  {/* Result metric */}
+                  {item.result && (
+                    <div className="mb-6 flex items-start gap-2 rounded-xl bg-secondary px-3 py-2.5 text-sm font-medium text-foreground">
+                      <ArrowUpRight className="mt-0.5 size-4 shrink-0 text-primary" />
+                      {item.result}
+                    </div>
+                  )}
+
+                  <div className="flex items-center text-sm font-medium text-primary">
+                    Ver detalle
+                    <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </a>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+      </div>
+    </section>
+  );
+};
+
+export { Gallery6 };
