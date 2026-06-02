@@ -10,6 +10,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import ItemDetailModal, { DetailItem } from "@/components/ui/item-detail-modal";
 
 interface GalleryItem {
   id: string;
@@ -41,6 +42,7 @@ const Gallery6 = ({
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<DetailItem | null>(null);
 
   // Update scroll buttons whenever the API is ready or items change
   useEffect(() => {
@@ -51,7 +53,6 @@ const Gallery6 = ({
       setCanScrollNext(carouselApi.canScrollNext());
     };
 
-    // Reinitialize when items arrive after async load, then refresh state
     carouselApi.reInit();
     updateSelection();
 
@@ -116,7 +117,7 @@ const Gallery6 = ({
           <CarouselContent className="-mr-4 ml-8 2xl:ml-[max(8rem,calc(50vw-700px+1rem))] 2xl:mr-[max(0rem,calc(50vw-700px-1rem))]">
             {items.map((item) => (
               <CarouselItem key={item.id} className="pl-4 md:max-w-[452px]">
-                <a href={item.url} className="group flex flex-col justify-between">
+                <div className="group flex flex-col justify-between cursor-pointer">
                   {/* Image */}
                   <div className="flex h-56 md:h-64 overflow-clip rounded-xl">
                     <div className="flex-1">
@@ -162,16 +163,23 @@ const Gallery6 = ({
                     </div>
                   )}
 
-                  <div className="flex items-center text-sm font-medium text-primary">
+                  {/* Ver detalle — opens modal */}
+                  <button
+                    onClick={() => setSelectedItem(item)}
+                    className="flex items-center text-sm font-medium text-primary hover:gap-3 transition-all gap-2"
+                  >
                     Ver detalle
-                    <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
-                  </div>
-                </a>
+                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                  </button>
+                </div>
               </CarouselItem>
             ))}
           </CarouselContent>
         </Carousel>
       </div>
+
+      {/* Detail modal */}
+      <ItemDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} />
     </section>
   );
 };
