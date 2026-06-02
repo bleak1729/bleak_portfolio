@@ -82,6 +82,34 @@
   * {
     border-color: hsl(var(--border));
   }
+
+  /* ── Keyboard focus ring ── */
+  :focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Skip to content — visible only on keyboard focus */
+  .skip-to-content {
+    position: fixed;
+    top: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    padding: 12px 24px;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 0 0 8px 8px;
+    transition: top 0.15s ease;
+    text-decoration: none;
+  }
+  .skip-to-content:focus {
+    top: 0;
+    outline: none;
+  }
 }
 
 @layer utilities {

@@ -19,8 +19,9 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 function Portfolio() {
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+      <a href="#top" className="skip-to-content">Saltar al contenido</a>
       <Navbar />
-      <main>
+      <main id="main">
         <GlowyWavesHero />
         <About />
         <Services />

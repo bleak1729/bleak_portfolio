@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { X, ArrowUpRight, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 
 export interface DetailItem {
   id: string
@@ -18,6 +19,8 @@ interface ItemDetailModalProps {
 }
 
 export default function ItemDetailModal({ item, onClose }: ItemDetailModalProps) {
+  const containerRef = useFocusTrap(!!item)
+
   // Close on Escape key
   useEffect(() => {
     if (!item) return
@@ -41,6 +44,10 @@ export default function ItemDetailModal({ item, onClose }: ItemDetailModalProps)
       onClick={onClose}
     >
       <div
+        ref={containerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={item?.title}
         className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-card border border-border shadow-2xl"
         onClick={e => e.stopPropagation()}
       >
