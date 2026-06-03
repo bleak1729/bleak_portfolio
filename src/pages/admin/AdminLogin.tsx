@@ -33,12 +33,12 @@ export default function AdminLogin() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex flex-col items-center gap-3 mb-8">
-          <img src="/Logo0.png" alt="Bleak's Productions" className="w-24 h-24 object-contain" />
+          <img src="/Logo0.png" alt="Bleak's Solutions" className="w-24 h-24 object-contain" />
           <span
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
             className="text-xl font-bold uppercase tracking-wide text-foreground whitespace-nowrap"
           >
-            Bleak's Productions
+            Bleak's Solutions
           </span>
         </div>
 

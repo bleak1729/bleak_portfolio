@@ -8,14 +8,14 @@ export default function Logo({ className = '', typeClassName = '' }: LogoProps) 
     <div className="flex items-center gap-2.5">
       <img
         src="/Logo0.png"
-        alt="Bleak's Productions"
+        alt="Bleak's Solutions"
         className={className}
       />
       <span
         style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         className={`font-bold uppercase tracking-wide text-foreground leading-none ${typeClassName}`}
       >
-        Bleak's Productions
+        Bleak's Solutions
       </span>
     </div>
   )
