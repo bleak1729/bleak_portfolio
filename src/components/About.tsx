@@ -1,32 +1,31 @@
 import {
   ContainerStagger,
   ContainerAnimated,
-  GalleryGrid,
-  GalleryGridCell,
 } from "@/components/blocks/cta-section-with-gallery";
+import { Search, ShieldCheck, Repeat, TrendingUp } from "lucide-react";
 
 const skills = ["Power Platform", "SQL Server", "Azure", "IA / OpenAI", "React / Next.js", "SaaS", "Integración SAP"];
 
 const howIWork = [
   {
-    step: "01",
-    label: "Descubrir el proceso real, no el documentado",
-    image: "/about/01.jpeg",
+    icon: Search,
+    title: "Descubrimiento real",
+    description: "Mapeo el proceso tal como ocurre en el día a día, no el documentado en el manual.",
   },
   {
-    step: "02",
-    label: "Diseñar con gobierno, seguridad y escala",
-    image: "/about/02.jpeg",
+    icon: ShieldCheck,
+    title: "Diseño gobernado",
+    description: "Arquitectura pensada para escalar, con seguridad y gobierno de datos desde el inicio.",
   },
   {
-    step: "03",
-    label: "Entregar iterativamente con el equipo en la sala",
-    image: "/about/03.jpeg",
+    icon: Repeat,
+    title: "Entrega iterativa",
+    description: "Construyo junto al equipo, en ciclos cortos, con retroalimentación constante.",
   },
   {
-    step: "04",
-    label: "Medir adopción y ROI desde el día uno",
-    image: "/about/04.jpeg",
+    icon: TrendingUp,
+    title: "Medición de impacto",
+    description: "Adopción y ROI se miden desde el día uno, no como una ocurrencia tardía.",
   },
 ];
 
@@ -80,34 +79,32 @@ export default function About() {
           </ContainerAnimated>
         </ContainerStagger>
 
-        {/* ── Right: Cómo trabajo gallery ── */}
+        {/* ── Right: Cómo trabajo ── */}
         <div>
-          {/* Title above grid */}
           <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-6 pl-1">
             Cómo trabajo
           </p>
 
-          <GalleryGrid>
-            {howIWork.map((item, index) => (
-              <GalleryGridCell key={item.step} index={index}>
-                {/* Photo */}
-                <img
-                  src={item.image}
-                  alt={item.label}
-                  className="size-full object-cover object-center"
-                />
-                {/* Overlay label */}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-3 pb-3 pt-6">
-                  <span className="block text-[10px] font-bold text-primary/80 mb-0.5 leading-none">
-                    {item.step}
+          <ul className="space-y-7">
+            {howIWork.map((item) => {
+              const Icon = item.icon;
+              return (
+                <li key={item.title} className="flex items-start gap-4">
+                  <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <Icon className="size-5" strokeWidth={1.75} />
                   </span>
-                  <span className="block text-[11px] font-semibold text-white leading-snug">
-                    {item.label}
-                  </span>
-                </div>
-              </GalleryGridCell>
-            ))}
-          </GalleryGrid>
+                  <div>
+                    <h3 className="text-base font-semibold text-foreground">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </div>
     </section>
