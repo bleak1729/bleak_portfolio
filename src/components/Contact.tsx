@@ -56,7 +56,7 @@ export default function Contact() {
         email: "Email",
         subject: "Asunto",
         message: "Mensaje",
-        submit: "Iniciar conversación →",
+        submit: "Enviar Mensaje",
       }}
     />
   );

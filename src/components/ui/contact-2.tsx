@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -175,8 +175,13 @@ export const Contact2 = ({
                     {error}
                   </p>
                 )}
-                <Button className="w-full" size="lg" type="submit" disabled={sending}>
-                  {sending ? 'Enviando…' : labels.submit}
+                <Button className="w-full gap-2" size="lg" type="submit" disabled={sending}>
+                  {sending ? 'Enviando…' : (
+                    <>
+                      <Send className="size-4" />
+                      {labels.submit}
+                    </>
+                  )}
                 </Button>
               </form>
             )}
