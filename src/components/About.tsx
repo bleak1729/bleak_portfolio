@@ -1,7 +1,9 @@
+import { motion } from "framer-motion";
 import {
   ContainerStagger,
   ContainerAnimated,
 } from "@/components/blocks/cta-section-with-gallery";
+import { StaggerContainer, StaggerItem } from "@/components/ui/fade-up";
 import { Search, ShieldCheck, Repeat, TrendingUp } from "lucide-react";
 
 const skills = ["Power Platform", "SQL Server", "Azure", "IA / OpenAI", "React / Next.js", "SaaS", "Integración SAP"];
@@ -85,14 +87,18 @@ export default function About() {
             Cómo trabajo
           </p>
 
-          <ul className="space-y-7">
+          <StaggerContainer className="space-y-7">
             {howIWork.map((item) => {
               const Icon = item.icon;
               return (
-                <li key={item.title} className="flex items-start gap-4">
-                  <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <StaggerItem key={item.title} className="flex items-start gap-4">
+                  <motion.span
+                    whileHover={{ scale: 1.1, rotate: -6 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                    className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"
+                  >
                     <Icon className="size-5" strokeWidth={1.75} />
-                  </span>
+                  </motion.span>
                   <div>
                     <h3 className="text-base font-semibold text-foreground">
                       {item.title}
@@ -101,10 +107,10 @@ export default function About() {
                       {item.description}
                     </p>
                   </div>
-                </li>
+                </StaggerItem>
               );
             })}
-          </ul>
+          </StaggerContainer>
         </div>
       </div>
     </section>
