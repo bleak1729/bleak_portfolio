@@ -18,9 +18,9 @@ interface WaveConfig {
 const portfolioPills = ["Power Platform", "SQL Server", "IA / Azure", "React / Web", "SaaS"] as const;
 
 const heroStats: { label: string; value: string }[] = [
-  { label: "Apps entregadas", value: "40+" },
-  { label: "Ejecuciones automatizadas", value: "1.2M+" },
-  { label: "ROI promedio", value: "10x" },
+  { label: "Apps entregadas", value: "10+" },
+  { label: "Reducción de tiempo de ciclo", value: "-70%" },
+  { label: "Años de experiencia", value: "8+" },
 ];
 
 const containerVariants: Variants = {
